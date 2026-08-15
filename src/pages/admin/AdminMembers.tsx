@@ -585,7 +585,7 @@ const AdminMembers: React.FC = () => {
                     </TableCell>
                     <TableCell>
                       <Typography variant="body2" fontWeight={500}>
-                        {member.currentSubscription?.package?.name || 'Chưa đăng ký'}
+                        {member.currentSubscription?.package?.name || member.subscriptions?.[0]?.package?.name || 'Chưa đăng ký'}
                       </Typography>
                     </TableCell>
                     <TableCell>

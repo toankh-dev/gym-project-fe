@@ -35,6 +35,7 @@ export interface Member {
   joinDate: string;
   membershipStatus: 'ACTIVE' | 'EXPIRED' | 'SUSPENDED' | 'CANCELLED';
   currentSubscription?: Subscription;
+  subscriptions?: Subscription[];
   assignedTrainerId?: number;
   assignedTrainer?: Trainer;
   profile: MemberProfile;
