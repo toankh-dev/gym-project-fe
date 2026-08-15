@@ -50,11 +50,12 @@ import { userApi } from '../../services/api.service';
 import { sanitizePayload, formatDisplayDate } from '../../utils/date';
 import { getApiErrorMessage } from '../../utils/errorHandler';
 import { useSnackbar } from '../../contexts/NotificationContext';
+import { User } from '../../types';
 
 const AdminStaff: React.FC = () => {
   const { enqueueSnackbar } = useSnackbar();
   // State
-  const [staff, setStaff] = useState<StaffUser[]>([]);
+  const [staff, setStaff] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -70,7 +71,7 @@ const AdminStaff: React.FC = () => {
 
   // Menu
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [selectedStaff, setSelectedStaff] = useState<StaffUser | null>(null);
+  const [selectedStaff, setSelectedStaff] = useState<User | null>(null);
 
   // Dialog
   const [addDialogOpen, setAddDialogOpen] = useState(false);
@@ -112,7 +113,7 @@ const AdminStaff: React.FC = () => {
       if (response.success) {
         const data = response.data as any;
         // Endpoint returns { users, pagination }
-        let users: StaffUser[] = data.users || [];
+        let users: User[] = data.users || [];
 
         // When no specific role is selected, show only non-member staff roles
         if (!roleFilter) {
@@ -171,7 +172,7 @@ const AdminStaff: React.FC = () => {
     setPage(0);
   };
 
-  const handleMenuClick = (event: React.MouseEvent<HTMLElement>, member: StaffUser) => {
+  const handleMenuClick = (event: React.MouseEvent<HTMLElement>, member: User) => {
     setAnchorEl(event.currentTarget);
     setSelectedStaff(member);
   };
