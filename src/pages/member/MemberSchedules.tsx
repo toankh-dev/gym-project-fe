@@ -78,7 +78,7 @@ const MemberSchedules: React.FC = () => {
       const items = (upcomingResp.data as any)?.schedules || upcomingResp.data || [];
       setAvailable(items);
       const ids = new Set<number>(
-        ((mineResp.data as any)?.sessions || []).map((s: any) => s.schedule?.id).filter(Boolean),
+        ((mineResp.data as any)?.sessions || []).map((s: any) => Number(s.schedule?.id)).filter(id => !isNaN(id)),
       );
       setMyRegisteredIds(ids);
     } catch (err: any) {
@@ -165,7 +165,7 @@ const MemberSchedules: React.FC = () => {
           ) : (
             <Grid container spacing={2}>
               {available.map((s: any) => {
-                const id = s.id;
+                const id = Number(s.id);
                 const alreadyBooked = myRegisteredIds.has(id);
                 const enrolled = Number(s.currentEnrollment ?? 0);
                 const capacity = Number(s.maxCapacity ?? 0);
