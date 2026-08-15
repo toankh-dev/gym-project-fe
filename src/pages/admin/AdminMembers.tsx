@@ -849,9 +849,9 @@ const AdminMembers: React.FC = () => {
             Hội viên: {selectedMember?.user?.profile?.fullName || selectedMember?.user?.username} ({selectedMember?.memberCode})
           </Typography>
 
-          {selectedMember?.membershipStatus !== 'ACTIVE' && (
+          {(!selectedMember?.currentSubscription || selectedMember.currentSubscription.status !== 'ACTIVE') && (
             <Alert severity="warning" sx={{ mb: 2 }}>
-              ⚠️ Hội viên này chưa có gói tập đang hoạt động (Trạng thái: {selectedMember?.membershipStatus}). Cần hoàn tất đăng ký/thanh toán gói tập trước khi phân công HLV.
+              ⚠️ Hội viên này chưa có gói tập đang hoạt động (Hoá đơn: {selectedMember?.currentSubscription?.status || 'Chưa có'}). Cần hoàn tất đăng ký/thanh toán gói tập trước khi phân công HLV.
             </Alert>
           )}
 
