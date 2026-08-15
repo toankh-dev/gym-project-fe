@@ -649,7 +649,7 @@ const AdminMembers: React.FC = () => {
           <EditIcon sx={{ mr: 1 }} />
           Edit Member
         </MenuItem>
-        {selectedMember?.membershipStatus === 'ACTIVE' && (
+        {selectedMember?.currentSubscription?.status === 'ACTIVE' && (
           <MenuItem onClick={() => {
             const targetMember = selectedMember;
             setAnchorEl(null);
