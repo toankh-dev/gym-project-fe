@@ -1,0 +1,173 @@
+import { createTheme } from '@mui/material/styles';
+
+export const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#FF6B35', // Orange - energetic gym color
+      light: '#FF8A65',
+      dark: '#E65100',
+      contrastText: '#ffffff',
+    },
+    secondary: {
+      main: '#2E3440', // Dark blue-gray
+      light: '#4C566A',
+      dark: '#1E1E2E',
+      contrastText: '#ffffff',
+    },
+    background: {
+      default: '#F5F7FA',
+      paper: '#FFFFFF',
+    },
+    text: {
+      primary: '#2E3440',
+      secondary: '#5E81AC',
+    },
+    success: {
+      main: '#4CAF50',
+    },
+    error: {
+      main: '#F44336',
+    },
+    warning: {
+      main: '#FF9800',
+    },
+    info: {
+      main: '#2196F3',
+    },
+  },
+  typography: {
+    fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
+    h1: {
+      fontSize: '2.5rem',
+      fontWeight: 700,
+      lineHeight: 1.2,
+    },
+    h2: {
+      fontSize: '2rem',
+      fontWeight: 600,
+      lineHeight: 1.3,
+    },
+    h3: {
+      fontSize: '1.75rem',
+      fontWeight: 600,
+      lineHeight: 1.3,
+    },
+    h4: {
+      fontSize: '1.5rem',
+      fontWeight: 500,
+      lineHeight: 1.4,
+    },
+    h5: {
+      fontSize: '1.25rem',
+      fontWeight: 500,
+      lineHeight: 1.4,
+    },
+    h6: {
+      fontSize: '1rem',
+      fontWeight: 500,
+      lineHeight: 1.4,
+    },
+    body1: {
+      fontSize: '1rem',
+      lineHeight: 1.6,
+    },
+    body2: {
+      fontSize: '0.875rem',
+      lineHeight: 1.6,
+    },
+    button: {
+      textTransform: 'none',
+      fontWeight: 500,
+    },
+  },
+  shape: {
+    borderRadius: 8,
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: '8px',
+          padding: '10px 24px',
+          fontSize: '0.95rem',
+          fontWeight: 500,
+          boxShadow: 'none',
+          '&:hover': {
+            boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+          },
+        },
+        containedPrimary: {
+          background: 'linear-gradient(45deg, #FF6B35 30%, #FF8A65 90%)',
+          '&:hover': {
+            background: 'linear-gradient(45deg, #E65100 30%, #FF6B35 90%)',
+          },
+        },
+      },
+    },
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          borderRadius: '12px',
+          boxShadow: '0 2px 12px rgba(0,0,0,0.08)',
+          border: '1px solid #E5E7EB',
+        },
+      },
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          '& .MuiOutlinedInput-root': {
+            borderRadius: '8px',
+          },
+        },
+      },
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          borderRadius: '12px',
+        },
+      },
+    },
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#FFFFFF',
+          color: '#2E3440',
+          boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+          borderBottom: '1px solid #E5E7EB',
+        },
+      },
+    },
+    MuiDrawer: {
+      styleOverrides: {
+        paper: {
+          borderRight: '1px solid #E5E7EB',
+          boxShadow: '2px 0 8px rgba(0,0,0,0.08)',
+        },
+      },
+    },
+  },
+});
+
+// Custom styles for different roles
+export const roleColors = {
+  ADMIN: {
+    primary: '#9C27B0', // Purple
+    background: '#F3E5F5',
+  },
+  STAFF: {
+    primary: '#2196F3', // Blue
+    background: '#E3F2FD',
+  },
+  TRAINER: {
+    primary: '#4CAF50', // Green
+    background: '#E8F5E8',
+  },
+  MEMBER: {
+    primary: '#FF6B35', // Orange
+    background: '#FFF3E0',
+  },
+};
+
+export default theme;
