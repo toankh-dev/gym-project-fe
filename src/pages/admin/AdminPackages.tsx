@@ -268,7 +268,7 @@ const AdminPackages: React.FC = () => {
           <Card>
             <CardContent>
               <Typography variant="h4" color="warning.main">
-                {formatPrice(packages.reduce((sum, p) => sum + p.price, 0) / (packages.length || 1))}
+                {formatPrice(packages.reduce((sum, p) => sum + Number(p.price), 0) / (packages.length || 1))}
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 Giá trung bình
