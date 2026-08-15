@@ -286,7 +286,8 @@ const AdminMembers: React.FC = () => {
       fullName: selectedMember.user.profile.fullName,
       gender: selectedMember.user.profile.gender,
       dateOfBirth: selectedMember.user.profile.dateOfBirth ? formatToISODate(selectedMember.user.profile.dateOfBirth) : '',
-      packageId: selectedMember.currentSubscription?.package?.id?.toString() || '',
+      packageId: selectedMember.currentSubscription?.package?.id?.toString() || 
+                 selectedMember.subscriptions?.find(s => s.status === 'ACTIVE' || s.status === 'PENDING')?.package?.id?.toString() || '',
     });
     setFormErrors({});
     setIsEditMode(true);
