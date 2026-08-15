@@ -73,6 +73,7 @@ const AdminMembers: React.FC = () => {
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [addDialogOpen, setAddDialogOpen] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [packages, setPackages] = useState<any[]>([]);
   const [formData, setFormData] = useState({
@@ -99,6 +100,7 @@ const AdminMembers: React.FC = () => {
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return 'Email không hợp lệ (ví dụ: member@gym.com)';
         return '';
       case 'password':
+        if (isEditMode && !value) return '';
         if (!value) return 'Mật khẩu không được để trống';
         if (value.length < 8) return 'Mật khẩu phải có ít nhất 8 ký tự';
         if (!/[a-z]/.test(value)) return 'Mật khẩu phải chứa ít nhất 1 chữ cái thường (a-z)';
@@ -270,7 +272,26 @@ const AdminMembers: React.FC = () => {
       packageId: '',
     });
     setFormErrors({});
+    setIsEditMode(false);
     setAddDialogOpen(true);
+  };
+
+  const handleOpenEditDialog = () => {
+    if (!selectedMember) return;
+    setFormData({
+      username: selectedMember.user.username,
+      email: selectedMember.user.email,
+      password: '',
+      phone: selectedMember.user.phone || '',
+      fullName: selectedMember.user.profile.fullName,
+      gender: selectedMember.user.profile.gender,
+      dateOfBirth: selectedMember.user.profile.dateOfBirth ? formatToISODate(selectedMember.user.profile.dateOfBirth) : '',
+      packageId: selectedMember.currentSubscription?.package?.id?.toString() || '',
+    });
+    setFormErrors({});
+    setIsEditMode(true);
+    setAddDialogOpen(true);
+    handleMenuClose();
   };
 
   const handleCloseAddDialog = () => {
@@ -294,19 +315,28 @@ const AdminMembers: React.FC = () => {
       return;
     }
 
-    const payload = sanitizePayload(formData, ['dateOfBirth']);
+    let payload = sanitizePayload(formData, ['dateOfBirth']);
+    if (isEditMode && !payload.password) {
+      delete payload.password;
+    }
 
     try {
       setSubmitting(true);
-      const response = await memberApi.createMember(payload) as any;
+      let response: any;
+      if (isEditMode && selectedMember) {
+        response = await memberApi.updateMember(selectedMember.id, payload);
+      } else {
+        response = await memberApi.createMember(payload);
+      }
+      
       if (response.success) {
-        enqueueSnackbar('Thêm hội viên thành công!', { variant: 'success' });
+        enqueueSnackbar(isEditMode ? 'Cập nhật hội viên thành công!' : 'Thêm hội viên thành công!', { variant: 'success' });
         handleCloseAddDialog();
         loadMembers();
         loadStatistics();
       }
     } catch (err: any) {
-      console.error('Error creating member:', err);
+      console.error(isEditMode ? 'Error updating member:' : 'Error creating member:', err);
       const apiErrors = err?.response?.data?.errors;
       if (Array.isArray(apiErrors) && apiErrors.length > 0) {
         const backendFormErrors: Record<string, string> = {};
@@ -315,7 +345,7 @@ const AdminMembers: React.FC = () => {
         });
         setFormErrors(prev => ({ ...prev, ...backendFormErrors }));
       } else {
-        enqueueSnackbar(getApiErrorMessage(err, 'Không thể tạo hội viên'), { variant: 'error' });
+        enqueueSnackbar(getApiErrorMessage(err, isEditMode ? 'Không thể cập nhật hội viên' : 'Không thể tạo hội viên'), { variant: 'error' });
       }
     } finally {
       setSubmitting(false);
@@ -500,6 +530,7 @@ const AdminMembers: React.FC = () => {
                 <TableCell>Member</TableCell>
                 <TableCell>Member Code</TableCell>
                 <TableCell>Join Date</TableCell>
+                <TableCell>Gói tập</TableCell>
                 <TableCell>Status</TableCell>
                 <TableCell>Trainer</TableCell>
                 <TableCell align="right">Actions</TableCell>
@@ -548,7 +579,14 @@ const AdminMembers: React.FC = () => {
                       </Typography>
                     </TableCell>
                     <TableCell>
-                      {formatDate(member.joinDate)}
+                      <Typography variant="body2">
+                        {formatDisplayDate(member.joinDate)}
+                      </Typography>
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="body2" fontWeight={500}>
+                        {member.currentSubscription?.package?.name || 'Chưa đăng ký'}
+                      </Typography>
                     </TableCell>
                     <TableCell>
                       <Chip
@@ -607,7 +645,7 @@ const AdminMembers: React.FC = () => {
         open={Boolean(anchorEl)}
         onClose={handleMenuClose}
       >
-        <MenuItem onClick={handleMenuClose}>
+        <MenuItem onClick={handleOpenEditDialog}>
           <EditIcon sx={{ mr: 1 }} />
           Edit Member
         </MenuItem>
@@ -682,7 +720,7 @@ const AdminMembers: React.FC = () => {
 
       {/* Add Member Dialog */}
       <Dialog open={addDialogOpen} onClose={handleCloseAddDialog} maxWidth="md" fullWidth>
-        <DialogTitle>Add New Member</DialogTitle>
+        <DialogTitle>{isEditMode ? 'Edit Member' : 'Add New Member'}</DialogTitle>
         <DialogContent dividers>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={6}>
@@ -716,11 +754,11 @@ const AdminMembers: React.FC = () => {
                 label="Password"
                 type="password"
                 fullWidth
-                required
+                required={!isEditMode}
                 value={formData.password}
                 onChange={handleFormChange}
                 error={Boolean(formErrors.password)}
-                helperText={formErrors.password || 'Tối thiểu 8 ký tự (chữ HOA, chữ thường, số, ký tự đặc biệt @$!%*?&)'}
+                helperText={formErrors.password || (isEditMode ? 'Để trống nếu không muốn thay đổi' : 'Tối thiểu 8 ký tự (chữ HOA, chữ thường, số, ký tự đặc biệt @$!%*?&)')}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -798,7 +836,7 @@ const AdminMembers: React.FC = () => {
         <DialogActions>
           <Button onClick={handleCloseAddDialog} disabled={submitting}>Cancel</Button>
           <Button onClick={handleAddSubmit} variant="contained" disabled={submitting}>
-            {submitting ? <CircularProgress size={24} /> : 'Add Member'}
+            {submitting ? 'Saving...' : (isEditMode ? 'Save Changes' : 'Add Member')}
           </Button>
         </DialogActions>
       </Dialog>
