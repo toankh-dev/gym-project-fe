@@ -168,11 +168,6 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ userRole }) => {
             icon: <FitnessCenterIcon />,
           },
           {
-            text: 'Staff',
-            path: '/admin/staff',
-            icon: <GroupIcon />,
-          },
-          {
             text: 'Packages',
             path: '/admin/packages',
             icon: <LocalOfferIcon />,
